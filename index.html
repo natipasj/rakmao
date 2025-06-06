@@ -41,24 +41,23 @@
       font-weight: 500;
       margin-top: 16px;
     }
-    input[type="number"],
+    input[type="number"] {
+      width: 100%;
+      font-size: 20px;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+    .range-container {
+      position: relative;
+    }
     input[type="range"] {
       width: 100%;
       margin-top: 4px;
-      box-sizing: border-box;
-    }
-    input[type="number"] {
-      font-size: 20px;
-      padding: 10px;
-    }
-    input[type="range"] {
       appearance: none;
       height: 6px;
       background: #d0d7e5;
       border-radius: 4px;
       outline: none;
-      margin: 0;
-      padding: 0;
     }
     input[type="range"]::-webkit-slider-thumb {
       appearance: none;
@@ -68,6 +67,8 @@
       background: #0b57d0;
       cursor: pointer;
       margin-top: -6px;
+      position: relative;
+      z-index: 2;
     }
     input[type="range"]::-moz-range-thumb {
       height: 18px;
@@ -75,13 +76,28 @@
       border-radius: 50%;
       background: #0b57d0;
       cursor: pointer;
+      z-index: 2;
     }
     .range-labels {
-      display: flex;
-      justify-content: space-between;
+      position: relative;
+      height: 24px;
+      margin-top: 2px;
+    }
+    .range-labels span {
+      position: absolute;
       font-size: 13px;
       color: #666;
-      margin-top: 4px;
+      transform: translateX(-50%);
+      text-align: center;
+    }
+    .range-labels span.label-1 { left: 0%; }
+    .range-labels span.label-45 { left: 100%; }
+    .note-text {
+      font-size: 13px;
+      color: red;
+      margin-top: 2px;
+      margin-bottom: 6px;
+      text-align: left;
     }
     .details {
       margin-top: 20px;
@@ -110,6 +126,15 @@
       color: red;
       font-weight: bold;
     }
+    .note-box {
+      margin-top: 20px;
+      padding: 16px;
+      background-color: #fff3cd;
+      border-left: 4px solid #ffc107;
+      font-size: 14px;
+      color: #212529;
+      border-radius: 4px;
+    }
   </style>
 </head>
 <body>
@@ -124,25 +149,31 @@
 
   <h2>การคำนวณอัตราดอกเบี้ยเมื่อชำระเงินผ่านสินเชื่อไวเวอร์</h2>
   <div class="sub-header">
-ฟอร์มประเมินดอกเบี้ยจ่ายจริงสินเชื่อไวเวอร์
-(สามารถตรวจสอบยอดชำระพร้อมดอกเบี้ยรายวันที่ได้ App ไวเวอร์)
+แบบฟอร์มประเมินดอกเบี้ยจ่ายจริงกรณีกู้ยืมสินเชื่อต่อทุนไวเวอร์
+(สามารถตรวจสอบยอดชำระพร้อมดอกเบี้ยรายวันได้ที่ แอปฯไวเวอร์)
   </div>
 
   <label for="materialCost">ยอดสั่งซื้อวัสดุก่อสร้าง (บาท)</label>
   <input type="number" id="materialCost" aria-label="ยอดสั่งซื้อวัสดุก่อสร้าง (บาท)" value="1000" min="0" step="10" />
 
   <label for="numDays">ระยะเวลาที่ต้องการชำระคืน (วัน)</label>
+  <div class="note-text">
+    เลือกระยะเวลากู้ยืมได้ 30 หรือ 45 วัน แต่สามารถชำระคืนก่อนกำหนดได้ โดยคิดดอกเบี้ยตามจำนวนวันที่ใช้จริง
+  </div>
   <div class="value-display"><span id="numDaysDisplay">1</span> วัน</div>
-  <input type="range" id="numDays" aria-label="จำนวนวันที่ต้องการผ่อนชำระ" min="1" max="45" value="1" />
+
+  <div class="range-container">
+    <input type="range" id="numDays" aria-label="จำนวนวันที่ต้องการผ่อนชำระ" min="1" max="45" value="1" />
+  </div>
   <div class="range-labels">
-    <span>1</span>
-    <span>45</span>
+    <span class="label-1">1</span>
+    <span class="label-45">45</span>
   </div>
 
   <div class="details">
     <div class="details-row"><div>ยอดสั่งซื้อวัสดุก่อสร้าง:</div><div id="costDisplay">1,000.00</div></div>
     <div class="details-row"><div>ค่าธรรมเนียมชำระเงิน (1%):</div><div id="feeDisplay">10.00</div></div>
-    <div class="details-row"><div>ยอดชำระสุทธิผ่านแพลตฟอร์มรักเหมา:<br/>(ยอดชำระเงินด้วยสินเชื่อ QR ไวเวอร์)</div><div id="totalToRakmao">1,010.00</div></div>
+    <div class="details-row"><div>ยอดชำระสุทธิผ่านแพลตฟอร์มรักเหมา:<br/>(ยอดชำระด้วยคิวอาร์โคด ผ่านแอปฯไวเวอร์)</div><div id="totalToRakmao">1,010.00</div></div>
 
     <hr style="margin: 12px 0;" />
     <div class="details-row">
@@ -161,6 +192,19 @@
     </div>
   </div>
 
+  <div class="note-box">
+    <h3 style="margin: 0 0 12px 0; font-weight: bold;">หมายเหตุ</h3>
+    <ul style="padding-left: 20px; margin: 0 0 12px 0;">
+      <li>วงเงินกู้ 10,000 บาท เบิกใช้ 5,000 บาท ระยะเวลา 30 วัน ดอกเบี้ย สำหรับเงินกู้ 5,000 บาท คิดเป็นดอกเบี้ยทั้งหมด 62 บาท หรือ 2 บาทต่อวัน ในระยะเวลา 30 วัน</li>
+      <li>วงเงิน อัตราดอกเบี้ย และระยะเวลาชำระคืนที่ผู้กู้แต่ละรายได้รับอนุมัติจะขึ้นอยู่กับการพิจารณาของบริษัท</li>
+      <li>ระยะเวลาในการอนุมัติเริ่มนับจากเวลาที่บริษัทได้รับข้อมูล การสมัครครบถ้วน</li>
+      <li>ไม่มีดอกเบี้ยผิดนัด ทั้งนี้อัตราดอกเบี้ยปกติไม่เกิน 15% ต่อปี จะถูกคำนวณจากเงินต้นคงค้างจนกว่าจะถึงวันที่ชำระคืน</li>
+    </ul>
+    <div style="font-size: 18px; font-weight: bold; color: #d00000;">
+      กู้เท่าที่จำเป็นและชำระคืนไหว อัตราดอกเบี้ย 15% ต่อปี
+    </div>
+  </div>
+
   <script>
     function formatNumber(num) {
       return parseFloat(num).toLocaleString('th-TH', {
@@ -172,13 +216,11 @@
     function calculate() {
       const materialCost = parseFloat(document.getElementById('materialCost').value) || 0;
       const numDays = parseInt(document.getElementById('numDays').value);
-
       document.getElementById('numDaysDisplay').innerText = numDays;
 
       const fee = materialCost * 0.01;
       const total = materialCost + fee;
       const loanAmount = total;
-
       const interestRatePerDay = 0.15 / 365;
       const interestAmount = loanAmount * interestRatePerDay * numDays;
       const repayAmount = loanAmount + interestAmount;
