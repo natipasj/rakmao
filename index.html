@@ -114,6 +114,12 @@
       margin-bottom: 4px;
       word-break: break-word;
     }
+    .details-row .sub-note {
+      font-size: 12px;
+      color: red;
+      font-weight: normal;
+      margin-top: -2px;
+    }
     .details-row.summary {
       border-top: 2px solid #ddd;
       margin-top: 12px;
@@ -172,7 +178,13 @@
 
   <div class="details">
     <div class="details-row"><div>ยอดสั่งซื้อวัสดุก่อสร้าง:</div><div id="costDisplay">1,000.00</div></div>
-    <div class="details-row"><div>ค่าธรรมเนียมชำระเงิน (1%):</div><div id="feeDisplay">10.00</div></div>
+    <div class="details-row">
+      <div>
+        ค่าธรรมเนียมชำระเงิน (0.5%):
+        <div class="sub-note">ช่วงโปรฯ 0.5% (ปกติ 1%)</div>
+      </div>
+      <div id="feeDisplay">10.00</div>
+    </div>
     <div class="details-row"><div>ยอดชำระสุทธิผ่านแพลตฟอร์มรักเหมา:<br/>(ยอดชำระด้วยคิวอาร์โคด ผ่านแอปฯไวเวอร์)</div><div id="totalToRakmao">1,010.00</div></div>
 
     <hr style="margin: 12px 0;" />
@@ -218,7 +230,7 @@
       const numDays = parseInt(document.getElementById('numDays').value);
       document.getElementById('numDaysDisplay').innerText = numDays;
 
-      const fee = materialCost * 0.01;
+      const fee = materialCost * 0.005;
       const total = materialCost + fee;
       const loanAmount = total;
       const interestRatePerDay = 0.15 / 365;
