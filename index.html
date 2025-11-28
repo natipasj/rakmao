@@ -188,8 +188,10 @@
     <div class="details-row"><div>ยอดชำระสุทธิผ่านแพลตฟอร์มรักเหมา:<br/>(ยอดชำระด้วยคิวอาร์โคด ผ่านแอปฯไวเวอร์)</div><div id="totalToRakmao">1,010.00</div></div>
 
     <hr style="margin: 12px 0;" />
-    <div class="details-row">
-      <div><span class="highlight">% ดอกเบี้ยรายวัน (15% ต่อปี / 1.25% ต่อเดือน)</span></div>
+    <label for="annualRate">อัตราดอกเบี้ยต่อปี (%)</label>
+  <input type="number" id="annualRate" value="15" min="0" step="0.01" />
+  <div class="details-row">
+    <div><span class="highlight" id="interestLabel">% ดอกเบี้ยรายวัน (<span id='annualRateText'>15</span>% ต่อปี = <span id='dailyRateText'>0.041</span>% ต่อวัน)</span></div>
     </div>
     <div class="details-row"><div>ดอกเบี้ยเฉลี่ยต่อวัน:</div><div id="dailyInterest">0.41</div></div>
     <div class="details-row"><div>อัตราดอกเบี้ยนับถึงวันที่ต้องการชำระ:</div><div id="interestAmount">0.42</div></div>
@@ -210,10 +212,10 @@
       <li>วงเงินกู้ 10,000 บาท เบิกใช้ 5,000 บาท ระยะเวลา 30 วัน ดอกเบี้ยสำหรับเงินกู้ 5,000 บาท คิดเป็นดอกเบี้ยทั้งหมด 62 บาท หรือ 2 บาทต่อวัน ในระยะเวลา 30 วัน</li>
       <li>วงเงิน อัตราดอกเบี้ย และระยะเวลาชำระคืนที่ผู้กู้แต่ละรายได้รับอนุมัติจะขึ้นอยู่กับการพิจารณาของบริษัท</li>
       <li>ระยะเวลาในการอนุมัติเริ่มนับจากเวลาที่บริษัทได้รับข้อมูลการสมัครครบถ้วน</li>
-      <li>ไม่มีดอกเบี้ยผิดนัด ทั้งนี้อัตราดอกเบี้ยปกติไม่เกิน 15% ต่อปี จะถูกคำนวณจากเงินต้นคงค้างจนกว่าจะถึงวันที่ชำระคืน</li>
+      <li>อัตราดอกเบี้ยปกติประมาณ 25%-30% ต่อปี จะถูกคำนวณจากเงินต้นคงค้างจนกว่าจะถึงวันที่ชำระคืน</li>
     </ul>
     <div style="font-size: 18px; font-weight: bold; color: #d00000;">
-      กู้เท่าที่จำเป็นและชำระคืนไหว อัตราดอกเบี้ย 15% ต่อปี
+      กู้เท่าที่จำเป็นและชำระคืนไหว อัตราดอกเบี้ย 25%-30% ต่อปี
     </div>
   </div>
 
@@ -233,7 +235,8 @@
       const fee = materialCost * 0.005;
       const total = materialCost + fee;
       const loanAmount = total;
-      const interestRatePerDay = 0.15 / 365;
+      const annualRate = (parseFloat(document.getElementById('annualRate').value) || 0) / 100;
+      const interestRatePerDay = annualRate / 365;
       const interestAmount = loanAmount * interestRatePerDay * numDays;
       const repayAmount = loanAmount + interestAmount;
 
@@ -242,10 +245,13 @@
       document.getElementById('totalToRakmao').innerText = formatNumber(total);
       document.getElementById('repayDisplay').innerText = formatNumber(repayAmount);
       document.getElementById('interestAmount').innerText = formatNumber(interestAmount);
-      document.getElementById('dailyInterest').innerText = formatNumber(loanAmount * interestRatePerDay);
+      document.getElementById('dailyInterest').innerText = (loanAmount * interestRatePerDay).toFixed(2);
+      document.getElementById('annualRateText').innerText = (annualRate * 100).toFixed(2).replace(/\.00$/, '');
+      document.getElementById('dailyRateText').innerText = (interestRatePerDay * 100).toFixed(3).replace(/\.000$/, '');
     }
 
     document.getElementById('materialCost').addEventListener('input', calculate);
+    document.getElementById('annualRate').addEventListener('input', calculate);
     document.getElementById('numDays').addEventListener('input', calculate);
     window.onload = calculate;
   </script>
